@@ -7,16 +7,16 @@ RUN rm -rf /var/lib/apt/lists/* \
            /etc/apt/sources.list.d/nvidia-ml.list
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git
+    apt-get install -y --no-install-recommends git && \
+    apt-get clean && \
+    rm -rf /var/cache/apt/archives/*
 
 WORKDIR /root
 
-RUN git clone https://github.com/facebookresearch/SparseConvNet.git --single-branch --depth 1
-
-RUN cd ./SparseConvNet && bash develop.sh && cd ../
+RUN git clone https://github.com/facebookresearch/SparseConvNet.git --single-branch --depth 1 && \
+    cd ./SparseConvNet && bash develop.sh 
 
 RUN python -m pip install scipy plyfile
 
-RUN git clone https://github.com/humanbeingZ/sgnn.git --depth 1
-
-RUN cd ./sgnn/torch/marching_cubes && python -m pip install . && cd /root/
+RUN git clone https://github.com/humanbeingZ/sgnn.git --depth 1 && \
+    python -m pip install ./sgnn/torch/marching_cubes 
